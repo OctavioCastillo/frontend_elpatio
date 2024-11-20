@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-        overflow: 'hidden', // Asegura que la imagen se recorte al borde redondeado
+        overflow: 'hidden', 
     },
     couponImage: {
         resizeMode: 'cover',

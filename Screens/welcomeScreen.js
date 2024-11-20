@@ -3,7 +3,7 @@ import { Image, ImageBackground, StyleSheet, View, Text, TouchableOpacity } from
 import colors from '../config/colors';
 import AppText from '../components/AppText'; // Asegúrate de importar correctamente AppText
 
-function WelcomeScreen({ texto, navigation }) {
+function WelcomeScreen({  navigation }) {
     return (
         <ImageBackground
             source={require('../assets/bar.jpg')} 

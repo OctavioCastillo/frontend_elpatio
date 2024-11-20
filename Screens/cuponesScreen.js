@@ -45,9 +45,9 @@ function CuponesScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1c1c1e', // Fondo que representa un bar
-        paddingHorizontal: 20,  // Ajuste para evitar el choque con los bordes laterales
-        paddingTop: 20, // Evitar que se superponga con el área superior en el iPhone
+        backgroundColor: '#1c1c1e', 
+        paddingHorizontal: 20,  
+        paddingTop: 20, // 
     },
     title: {
         fontSize: 24,
@@ -65,17 +65,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,  
     },
     addButton: {
-        width: '80%', // Ajuste el tamaño del botón a un 80% del contenedor
-        backgroundColor: '#ffffff', // Fondo blanco
+        width: '80%', 
+        backgroundColor: '#ffffff', 
         justifyContent: 'center',
         alignItems: 'center',
         padding: 12,
         borderRadius: 8,
         marginTop: 10,
-        alignSelf: 'center', // Esto asegura que el botón esté centrado
+        alignSelf: 'center', 
     },
     addButtonText: {
-        color: '#000000', // Texto negro
+        color: '#000000', 
         fontSize: 16,
         fontWeight: 'bold',
     },
