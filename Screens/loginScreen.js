@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ImageBackground } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Asegúrate de instalar esta librería
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ImageBackground, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; 
 import colors from '../config/colors';
+import { loginUser } from '../config/authService';
 
 function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        console.log('Email:', email);
-        console.log('Password:', password);
-
-        // Lógica del login
-
-        // Navegar a la pantalla Home
-        navigation.navigate('Home');
+    const handleLogin = async () => {
+        try {
+            const response = await loginUser(email, password); // Llama al método de login
+            Alert.alert('Login exitoso', 'Bienvenido'); 
+            navigation.navigate('Home'); 
+        } catch (error) {
+            Alert.alert('Error en el inicio de sesión', 'Credenciales incorrectas o problema en el servidor'); 
+        }
     };
 
     return (
         <ImageBackground
-            source={require('../assets/login.jpg')} 
+            source={require('../assets/login.jpg')}
             style={styles.background}
         >
             {/* Flecha para volver */}
@@ -66,9 +67,9 @@ const styles = StyleSheet.create({
     },
     backButton: {
         position: 'absolute',
-        top: 40, // Ajusta según sea necesario para iOS/Android
+        top: 40, 
         left: 20,
-        zIndex: 10, // Asegúrate de que esté encima del fondo
+        zIndex: 10, 
     },
     container: {
         flex: 1,
