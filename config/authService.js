@@ -19,3 +19,19 @@ export const loginUser = async (email, password) => {
         throw error; 
     }
 };
+
+// Obtener datos del perfil del usuario
+export const getData = async () => {
+    try {
+        const response = await api.get('/perfil');
+
+        return response.data; 
+    } catch (error) {
+        if (error.response) {
+            console.error('Error en la respuesta del servidor:', error.response.data);
+        } else {
+            console.error('Error en la solicitud:', error.message);
+        }
+        throw error;
+    }
+};

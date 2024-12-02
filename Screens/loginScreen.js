@@ -11,7 +11,7 @@ function LoginScreen({ navigation }) {
     const handleLogin = async () => {
         try {
             const response = await loginUser(email, password); // Llama al método de login
-            Alert.alert('Login exitoso', 'Bienvenido'); 
+            // Alert.alert('Login exitoso', 'Bienvenido'); // Oculta por el momento
             navigation.navigate('Home'); 
         } catch (error) {
             Alert.alert('Error en el inicio de sesión', 'Credenciales incorrectas o problema en el servidor'); 

@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, Alert } from 'react-native';
 import colors from '../config/colors';
 import CouponCard from './couponCard';
 import NavBar from './navbar';
+import { getData } from '../config/authService';
 
 function HomeScreen({ navigation, route }) {
-    const userName = 'Juan Pérez';
-    const userPoints = 1200;
-
+    const [userName, setUserName] = useState(''); // Nombre del usuario
+    const [userPoints, setUserPoints] = useState(0); // Puntos del usuario
     const [coupons, setCoupons] = useState([
         { id: '1', image: require('../assets/cupon1.jpg'), description: 'Cupón de 20% de descuento' },
-    ]);
+    ]); // Lista de cupones
 
+    // Obtener datos del usuario al cargar la pantalla
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await getData(); // Llamada a la API para obtener datos del usuario
+                setUserName(response.Usuario.username); // Actualizar el nombre del usuario
+                setUserPoints(response.Usuario.puntos); // Actualizar los puntos del usuario
+            } catch (error) {
+                Alert.alert('Error', 'No se pudieron obtener los datos del usuario.');
+                console.error('Error obteniendo datos del usuario:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    // Manejo de nuevos cupones desde parámetros de navegación
     useEffect(() => {
         if (route.params?.newCoupon) {
             const newCoupon = route.params.newCoupon;
