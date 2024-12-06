@@ -73,3 +73,21 @@ export const registerUser = async (email, username, password) => {
         throw error;
     }
 };
+
+export const agregar_puntos = async (token, puntos) => {
+    try {
+      const response = await api.put('/agregar_puntos',
+        { puntos },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json', 
+          },
+        }
+      );
+      return response.data; 
+    } catch (error) {
+      console.error('Error al agregar puntos:', error.response?.data || error.message);
+      throw error;
+    }
+  };

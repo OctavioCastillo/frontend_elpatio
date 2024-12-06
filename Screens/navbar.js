@@ -2,18 +2,33 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QRCode from 'react-native-qrcode-svg'; // Importar QRCode para generar el código QR
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Para obtener el token
 import { getData } from '../config/authService'; // Importa tu función getData
 
 function NavBar({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [qrValue, setQrValue] = useState('');
 
-    // Función para obtener los datos del usuario y generar el QR
+    // Función para obtener los datos del usuario y generar el QR con el token incluido
     const handleGenerateQR = async () => {
         try {
-            const data = await getData(); // Llama a la función para obtener datos del perfil
-            setQrValue(JSON.stringify(data.Usuario)); // Almacena los datos del usuario como valor del QR
-            setModalVisible(true); // Abre el modal
+            // Obtiene los datos del perfil del usuario
+            const data = await getData(); 
+
+            // Obtiene el token desde AsyncStorage
+            const token = await AsyncStorage.getItem('token');
+
+            // Combina los datos del usuario con el token
+            const qrData = {
+                ...data.Usuario,
+                token: token || 'Token no disponible', // Incluye el token, o un mensaje si no está disponible
+            };
+
+            // Establece el valor para el código QR
+            setQrValue(JSON.stringify(qrData));
+
+            // Muestra el modal
+            setModalVisible(true);
         } catch (error) {
             Alert.alert('Error', 'No se pudo generar el código QR. Inténtalo más tarde.');
         }
@@ -43,7 +58,7 @@ function NavBar({ navigation }) {
             <Modal
                 visible={modalVisible}
                 transparent={true}
-                animationType="slide"
+                animationType="fade"
                 onRequestClose={() => setModalVisible(false)} // Cierra el modal al presionar "Atrás"
             >
                 <View style={styles.modalBackground}>
@@ -73,10 +88,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         backgroundColor: '#333',
-        paddingVertical: 10,
+        padding: 10,
     },
     navButton: {
-        justifyContent: 'center',
         alignItems: 'center',
     },
     navText: {
@@ -86,36 +100,40 @@ const styles = StyleSheet.create({
     },
     modalBackground: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
     modalContainer: {
-        width: 300,
+        width: '80%',
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 20,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     modalTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    errorText: {
-        fontSize: 14,
-        color: 'red',
+        marginBottom: 15,
+        textAlign: 'center',
     },
     closeButton: {
         marginTop: 20,
-        backgroundColor: '#333',
         paddingVertical: 10,
         paddingHorizontal: 20,
+        backgroundColor: '#333',
         borderRadius: 5,
     },
     closeButtonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    errorText: {
+        fontSize: 14,
+        color: 'red',
+        marginTop: 10,
     },
 });
 
