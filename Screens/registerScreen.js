@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ImageBackground } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Asegúrate de instalar esta librería
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ImageBackground, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; 
 import colors from '../config/colors';
+import { registerUser } from '../config/authService'; 
 
 function RegisterScreen({ navigation }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleRegister = () => {
-        console.log('Name:', name);
-        console.log('Email:', email);
-        console.log('Password:', password);
-        // Redirigir al usuario a la pantalla de inicio de sesión
-        navigation.navigate('Login');
+    const handleRegister = async () => {
+        if (!name || !email || !password) {
+            Alert.alert('Error', 'Por favor, completa todos los campos.');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response = await registerUser(email, name, password);
+            Alert.alert('Registro Exitoso', '¡Te has registrado correctamente!');
+            navigation.navigate('Login'); // Redirige al usuario a la pantalla de inicio de sesión
+        } catch (error) {
+            Alert.alert('Error', 'No se pudo completar el registro. Inténtalo nuevamente.');
+            console.error('Error en el registro:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -57,8 +71,14 @@ function RegisterScreen({ navigation }) {
                     value={password}
                     onChangeText={(text) => setPassword(text)}
                 />
-                <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                    <Text style={styles.buttonText}>Listo</Text>
+                <TouchableOpacity 
+                    style={styles.button} 
+                    onPress={handleRegister} 
+                    disabled={loading}
+                >
+                    <Text style={styles.buttonText}>
+                        {loading ? 'Registrando...' : 'Listo'}
+                    </Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
         </ImageBackground>
@@ -109,6 +129,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 8,
         marginTop: 10,
+        opacity: 0.8,
     },
     buttonText: {
         color: '#000',
