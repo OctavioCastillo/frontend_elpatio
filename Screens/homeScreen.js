@@ -1,12 +1,14 @@
+// HomeScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, Alert } from 'react-native';
 import CouponCard from './couponCard';
 import NavBar from './navbar';
 import { getData } from '../config/authService';
 
-function HomeScreen({ navigation, route }) {
+function HomeScreen({ navigation }) {
     const [userName, setUserName] = useState('');
     const [userPoints, setUserPoints] = useState(0);
+    const [userType, setUserType] = useState('');
     const [coupons, setCoupons] = useState([
         { id: '1', image: require('../assets/cupon1.jpg'), description: 'Cupón de 20% de descuento' },
     ]);
@@ -17,6 +19,7 @@ function HomeScreen({ navigation, route }) {
                 const response = await getData();
                 setUserName(response.Usuario.username);
                 setUserPoints(response.Usuario.puntos);
+                setUserType(response.Usuario.type); // Guardamos el tipo de usuario
             } catch (error) {
                 Alert.alert('Error', 'No se pudieron obtener los datos del usuario.');
                 console.error('Error obteniendo datos del usuario:', error);
@@ -27,13 +30,10 @@ function HomeScreen({ navigation, route }) {
     }, []);
 
     useEffect(() => {
-        if (route.params?.newCoupon) {
-            const newCoupon = route.params.newCoupon;
-            if (!coupons.some((coupon) => coupon.id === newCoupon.id || coupon._id === newCoupon._id)) {
-                setCoupons((prevCoupons) => [...prevCoupons, newCoupon]);
-            }
+        if (userType === 'admin') {
+            navigation.navigate('Admin'); 
         }
-    }, [route.params?.newCoupon]);
+    }, [userType, navigation]); 
 
     return (
         <SafeAreaView style={styles.container}>
