@@ -25,15 +25,19 @@ function ScannerScreen({ navigation }) {
   const handleBarcodeScanned = ({ data }) => {
     if (data && !qrLock.current) {
       qrLock.current = true; // Bloquea lecturas adicionales
-      console.log(data); // Muestra los datos escaneados en la consola
 
-      // Mostrar alerta y redirigir al administrador
-      Alert.alert('Éxito', 'Código QR escaneado con éxito.', [
-        {
-          text: 'Aceptar',
-          onPress: () => navigation.navigate('Admin'), // Redirige a la pantalla Admin
-        },
-      ]);
+      try {
+        const qrData = JSON.parse(data); // Parsear el JSON del QR
+        Alert.alert('Éxito', 'Código QR escaneado con éxito.', [
+          {
+            text: 'Aceptar',
+            onPress: () => navigation.navigate('Admin', { qrData }), // Pasa los datos a AdminScreen
+          },
+        ]);
+      } catch (error) {
+        Alert.alert('Error', 'El código QR no contiene un JSON válido.');
+        qrLock.current = false; // Permitir otro intento
+      }
     }
   };
 
@@ -45,7 +49,6 @@ function ScannerScreen({ navigation }) {
         facing="back"
         onBarcodeScanned={handleBarcodeScanned} // Maneja el escaneo del QR
       />
-      {/* Marco alrededor del área de escaneo */}
       <View style={styles.scanFrame}>
         <Text style={styles.scanText}>Alinea el código QR dentro del marco</Text>
       </View>
@@ -56,7 +59,7 @@ function ScannerScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000', // Fondo negro para una experiencia más inmersiva
+    backgroundColor: '#000',
   },
   scanFrame: {
     position: 'absolute',
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 200,
     borderWidth: 2,
-    borderColor: '#000',
+    borderColor: '#0E7AFE',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     position: 'absolute',
-    top: -30, // Mueve el texto arriba del marco
+    top: -30,
   },
 });
 

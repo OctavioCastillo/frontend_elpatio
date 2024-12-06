@@ -1,4 +1,5 @@
 import api from './Api';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Login de Usuario
@@ -76,18 +77,21 @@ export const registerUser = async (email, username, password) => {
 
 export const agregar_puntos = async (token, puntos) => {
     try {
-      const response = await api.put('/agregar_puntos',
+        const api_agregar = axios.create({
+            baseURL: 'https://elpatio-backend.onrender.com',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+        })
+      const response = await api_agregar.put('/agregar_puntos',
         { puntos },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-            'Content-Type': 'application/json', 
-          },
-        }
       );
-      return response.data; 
+      console.log("el de abajo es el token de la fucnión")
+      console.log(token)
+      return response.data; // Devuelve la respuesta de la API
     } catch (error) {
       console.error('Error al agregar puntos:', error.response?.data || error.message);
-      throw error;
+      throw error; // Lanza el error si ocurre alguno
     }
   };
