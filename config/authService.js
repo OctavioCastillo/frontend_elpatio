@@ -1,6 +1,5 @@
 import api from './Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 // Login de Usuario
 export const loginUser = async (email, password) => {
@@ -57,8 +56,7 @@ export const getCupones = async () => {
 // Registro de Usuario
 export const registerUser = async (email, username, password) => {
     try {
-        // Cambia la URL para que use la API local
-        const response = await axios.post('http://192.168.1.77:5000/register', {
+        const response = await api.post('/register', {
             email,
             username,
             password,
